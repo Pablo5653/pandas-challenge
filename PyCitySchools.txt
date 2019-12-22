@@ -1,0 +1,47 @@
+import pandas as pd
+
+schools_file = "PyCitySchools.csv"
+students_file = "Resources_students.csv"
+
+school_data = pd.read_csv(schools_file)
+student_data = pd.read_csv(students_file)
+
+school_data_complete = pd.merge(school_data,student_data, how="left", on=["school_name"])
+school_data_complete.head()
+
+#Calculate the total number of schools
+total_school = len(school_data["school_name"].unique())
+
+#Calculate the total number of students
+total_students = student_data["Student ID"].count()
+
+#Calculate the total budget
+total_budget = school_data["budget"].sum()
+
+#Calculate the average math score 
+avg_math = student_data["math_score"].mean()
+
+#Calculate the average reading score
+avg_reading = student_data["reading_score"].mean()
+
+#Calculate the overall passing rate (overall average score), i.e. (avg. math score + avg. reading score)/2
+overall_passing = (avg_math + avg_reading)/2
+
+#Calculate the percentage of students with a passing math score (70 or greater)
+percentage_passing_math = (((student_data["math_score"]>= 70).sum())/total_students)*100
+
+#Calculate the percentage of students with a passing reading score (70 or greater)
+
+summary_table = pd.DataFrame({"Total Schools": [total_school],
+                              "Total Students": total_students,
+                              "Total Budget": total_budget,
+                              "Average Math Score": avg_math,
+                              "Average Reading Score": avg_reading,
+                              "% Passing Math": percentage_passing_math,
+                              "% Passing Reading": percentage_passing_reading,
+                              "% Overall Passing Rate": overall_passing})
+summary_table
+
+test_group = school_data_complete.groupby(["school_name","type","budget"]).sum()
+
+test_group.head(15) 
